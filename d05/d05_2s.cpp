@@ -24,8 +24,8 @@ int main()
 
     vector<long> seeds;
 
-    vector<vector<long>> map;
-    vector<vector<vector<long>>> mapmap;
+    vector<string> map;
+    vector<vector<string>> mapmap;
 
     // create arrays to store maps
     for (int j = 1; j<8; j++) {
@@ -43,16 +43,7 @@ int main()
             s1 >> source_buf;
             s1 >> range_buf;
 
-            long dst = stol(dest_buf);
-            long src = stol(source_buf);
-            long rng = stol(range_buf);
-
-            vector<long> temp;
-            temp.push_back(dst);
-            temp.push_back(src);
-            temp.push_back(rng);
-            map.push_back(temp);
-
+            map.push_back(dest_buf + " " + source_buf + " " + range_buf);
         }
         mapFile.close();
         mapmap.push_back(map);
@@ -89,12 +80,12 @@ int main()
         // cout << "RANGE " << i << endl;
         // loop through a range
         for (long x = starts[i]; x<(starts[i]+ranges[i]); x++){
-            if (x%40000 == 0){
+            if (x%20000 == 0){
                 pct = 100.0*counter/2136279819.0;
                 cout << "minimum loc: " << min_loc << " - (" << pct << ") " << endl;
             }
 
-            // counter++;
+            counter++;
             maps[0] = x;
             // iterate through maps
             for (int j = 1; j<8; j++) {
@@ -104,9 +95,18 @@ int main()
 
                 for (int y=0; y<maprange[j-1]; y++) {
 
-                    long dst = mapmap[j-1][y][0];
-                    long src = mapmap[j-1][y][1];
-                    long rng = mapmap[j-1][y][2];
+                    stringstream s1(mapmap[j-1][y]);
+                    string dest_buf;
+                    string source_buf;
+                    string range_buf;
+
+                    s1 >> dest_buf;
+                    s1 >> source_buf;
+                    s1 >> range_buf;
+
+                    long dst = stol(dest_buf);
+                    long src = stol(source_buf);
+                    long rng = stol(range_buf);
 
                     // compare, and if within range, save dest number
                     if (maps[j-1] >= src && maps[j-1] < (src+rng)) {
@@ -120,7 +120,6 @@ int main()
             // record the minimum location
             if (maps[7] < min_loc) {
                 min_loc = maps[7];
-                cout << "MINIMUM CHANGED: " << min_loc << endl;
             }
         }
         
